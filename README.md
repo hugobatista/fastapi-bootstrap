@@ -1,10 +1,10 @@
 # FastAPI Bootstrap
 [![PyPI - Version](https://img.shields.io/pypi/v/fastapi-bootstrap.svg)](https://pypi.org/project/fastapi-bootstrap)
 [![PyPI - Python Version](https://img.shields.io/pypi/pyversions/fastapi-bootstrap.svg)](https://pypi.org/project/fastapi-bootstrap)
-[![Deploy to GHCR](https://github.com/0x6f677548/fastapi-bootstrap/actions/workflows/build-and-publish-to-ghcr.yml/badge.svg)](https://github.com/0x6f677548/fastapi-bootstrap/actions/workflows/build-and-publish-to-ghcr.yml)
-[![Deploy](https://github.com/0x6f677548/fastapi-bootstrap/actions/workflows/deploy-to-dockerhost.yml/badge.svg)](https://github.com/0x6f677548/fastapi-bootstrap/actions/workflows/deploy-to-dockerhost.yml)
-[![GitHub - Lint](https://github.com/0x6f677548/fastapi-bootstrap/actions/workflows/lint.yml/badge.svg)](https://github.com/0x6f677548/fastapi-bootstrap/actions/workflows/lint.yml)
-[![GitHub - Test](https://github.com/0x6f677548/fastapi-bootstrap/actions/workflows/test.yml/badge.svg)](https://github.com/0x6f677548/fastapi-bootstrap/actions/workflows/test.yml)
+[![Deploy to GHCR](https://go.hugobatista.com/github/fastapi-bootstrap/actions/workflows/build-and-publish-to-ghcr.yml/badge.svg)](https://go.hugobatista.com/github/fastapi-bootstrap/actions/workflows/build-and-publish-to-ghcr.yml)
+[![Deploy](https://go.hugobatista.com/github/fastapi-bootstrap/actions/workflows/deploy-to-dockerhost.yml/badge.svg)](https://go.hugobatista.com/github/fastapi-bootstrap/actions/workflows/deploy-to-dockerhost.yml)
+[![GitHub - Lint](https://go.hugobatista.com/github/fastapi-bootstrap/actions/workflows/lint.yml/badge.svg)](https://go.hugobatista.com/github/fastapi-bootstrap/actions/workflows/lint.yml)
+[![GitHub - Test](https://go.hugobatista.com/github/fastapi-bootstrap/actions/workflows/test.yml/badge.svg)](https://go.hugobatista.com/github/fastapi-bootstrap/actions/workflows/test.yml)
 
 FastAPI Bootstrap is a project template that bundles NGINX, FastAPI and OpenTelemetry, providing a bootstrap for anyone that wants to expose an API securely and with instrumentation. 
 
