@@ -11,7 +11,7 @@ requires-python = ">=3.13"
 license = "GPL-3.0"
 keywords = ["fastapi", "hatch", "nginx", "otel", "docker", "bootstrap"]
 authors = [
-  { name = "0x6f677546 (Hugo Batista)"},
+  { name = "Hugo Batista"},
 ]
 classifiers = [
   "Operating System :: OS Independent",
@@ -43,9 +43,9 @@ allow-direct-references = true
 api-server = "fastapi_bootstrap.api_server:entrypoint"
 
 [project.urls]
-Documentation = "https://github.com/0x6f677548/fastapi-bootstrap#readme"
-Issues = "https://github.com/0x6f677548/fastapi-bootstrap/issues"
-Source = "https://github.com/0x6f677548/fastapi-bootstrap"
+Documentation = "https://go.hugobatista.com/github/fastapi-bootstrap#readme"
+Issues = "https://go.hugobatista.com/github/fastapi-bootstrap/issues"
+Source = "https://go.hugobatista.com/github/fastapi-bootstrap"
 
 [tool.hatch.version]
 path = "src/fastapi_bootstrap/api_server/__about__.py"
