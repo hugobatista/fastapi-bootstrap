@@ -3,7 +3,7 @@
 FROM nginx:mainline
 
 # Links Docker image with repository
-LABEL org.opencontainers.image.source=https://github.com/0x6f677548/fastapi-bootstrap
+LABEL org.opencontainers.image.source=https://go.hugobatista.com/github/fastapi-bootstrap
 
 
 
