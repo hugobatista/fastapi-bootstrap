@@ -1,7 +1,7 @@
 FROM otel/opentelemetry-collector-contrib:latest 
 
 # Links Docker image with repository
-LABEL org.opencontainers.image.source=https://github.com/0x6f677548/fastapi-bootstrap
+LABEL org.opencontainers.image.source=https://github.com/hugobatista/fastapi-bootstrap
 
 
 # copy the config file to the /etc folder
