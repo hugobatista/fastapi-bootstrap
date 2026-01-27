@@ -34,11 +34,11 @@ jobs:
       matrix:
         include:
           - dockerfile: ./docker/api_proxy/Dockerfile
-            image: ghcr.io/0x6f677548/fastapi-bootstrap/api_proxy
+            image: ghcr.io/hugobatista/fastapi-bootstrap/api_proxy
           - dockerfile: ./docker/api_server/Dockerfile
-            image: ghcr.io/0x6f677548/fastapi-bootstrap/api_server
+            image: ghcr.io/hugobatista/fastapi-bootstrap/api_server
           - dockerfile: ./docker/otel_collector/Dockerfile
-            image: ghcr.io/0x6f677548/fastapi-bootstrap/otel_collector
+            image: ghcr.io/hugobatista/fastapi-bootstrap/otel_collector
   
     steps:
 
