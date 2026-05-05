@@ -1,4 +1,4 @@
-""" Base http middleware class """
+"""Base http middleware class"""
 
 import logging
 from starlette.middleware.base import BaseHTTPMiddleware as starlette_BaseHTTPMiddleware

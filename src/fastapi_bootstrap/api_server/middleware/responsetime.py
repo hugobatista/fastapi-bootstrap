@@ -1,4 +1,6 @@
 import logging
+from time import perf_counter
+
 from fastapi_bootstrap.api_server.middleware.base import BaseHTTPMiddleware
 
 
@@ -13,8 +15,6 @@ class ResponseTimeMiddleware(BaseHTTPMiddleware):
     async def dispatch(self, request, call_next):
         if not self.middleware_enabled:
             return await call_next(request)
-
-        from time import perf_counter
 
         _start = perf_counter()
 
