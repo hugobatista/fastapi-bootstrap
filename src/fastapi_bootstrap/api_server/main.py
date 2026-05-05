@@ -1,6 +1,9 @@
+import uvicorn
+
+from fastapi_bootstrap.api_server.app import app
+
+
 def entrypoint():
-    import uvicorn
-    from fastapi_bootstrap.api_server.app import app
 
     # this entrypoint should be used for dev purposes only
     # for production, make sure you use a proper server

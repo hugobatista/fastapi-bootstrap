@@ -1,5 +1,6 @@
 import logging
 import logging.config
+import os
 
 
 def init_default_logging():
@@ -19,9 +20,6 @@ def init_logging_from_file(filename: str = "logging.conf"):
     it configures logging to the console.
     filename: the name of the configuration file
     """
-
-    # check if the config file exists
-    import os
 
     if not os.path.exists(filename):
         init_default_logging()
