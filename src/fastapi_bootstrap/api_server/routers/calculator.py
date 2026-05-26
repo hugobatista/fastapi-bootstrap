@@ -1,6 +1,9 @@
 import logging
+from uuid import uuid4
+
 from fastapi import APIRouter, Depends, Request, HTTPException, status, Form
 from fastapi.openapi.models import APIKey
+from fastapi_bootstrap.api_server.__about__ import __version__
 from fastapi_bootstrap.api_server.routers.authentication import get_api_key, is_turnstile_valid
 from opentelemetry import trace, metrics
 from opentelemetry.trace import Tracer
@@ -9,7 +12,6 @@ from fastapi_bootstrap.api_server.monitoring.instrumentation import (
 )
 from pydantic import BaseModel
 from typing import Annotated
-
 
 # region ----------------- router setup -----------------
 
@@ -31,8 +33,6 @@ _calculations_done_counter = _meter.create_counter(
 
 # region ----------------- request id -----------------
 def _get_request_id(request: Request):
-    from uuid import uuid4
-
     # check if we have request_id in the request state. if not, log a warning
     if not hasattr(request.state, "request_id"):
         _logger.warning(
@@ -66,8 +66,6 @@ async def health_check():
 
 @router.get("/version")
 async def version():
-    from fastapi_bootstrap import __version__
-
     return {"version": __version__}
 
 

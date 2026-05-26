@@ -1,3 +1,4 @@
+import copy
 import logging
 import aiohttp
 from fastapi.security.api_key import APIKeyQuery, APIKeyHeader
@@ -8,7 +9,6 @@ from fastapi_bootstrap.api_server.monitoring.instrumentation import (
 )
 from opentelemetry.trace import Tracer
 from opentelemetry import trace
-
 
 _logger: logging.Logger = logging.getLogger(__name__)
 
@@ -34,8 +34,6 @@ class AuthConfig:
         """
 
         def _mask_sensitive_values(config: dict) -> dict:
-            import copy
-
             sensitive_keys = {"secret_key", "valid_api_keys"}
             masked_config = copy.deepcopy(config)
 
