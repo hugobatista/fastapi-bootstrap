@@ -1,4 +1,4 @@
-# FastAPI Bootstrap
+# <img src="https://fastapi.tiangolo.com/img/icon-white.svg" height="24" alt="" style="vertical-align:middle; margin-right:6px;" /> FastAPI Bootstrap
 [![PyPI - Version](https://img.shields.io/pypi/v/fastapi-bootstrap.svg)](https://pypi.org/project/fastapi-bootstrap)
 [![PyPI - Python Version](https://img.shields.io/pypi/pyversions/fastapi-bootstrap.svg)](https://pypi.org/project/fastapi-bootstrap)
 [![Deploy to GHCR](https://go.hugobatista.com/github/fastapi-bootstrap/actions/workflows/build-and-publish-to-ghcr.yml/badge.svg)](https://go.hugobatista.com/github/fastapi-bootstrap/actions/workflows/build-and-publish-to-ghcr.yml)
