@@ -76,8 +76,7 @@ packages = ["src/fastapi_bootstrap"]
 exclude = ["tests"]
 
 [tool.hatch.build.targets.sdist]
-packages = ["src/fastapi_bootstrap"]
-exclude = ["tests"]
+only-include = ["src/fastapi_bootstrap", "README.md"]
 
 [tool.hatch.envs.default]
 type = "virtual"

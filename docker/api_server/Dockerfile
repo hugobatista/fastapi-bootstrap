@@ -19,11 +19,15 @@ COPY --from=uv-dist /uv /uvx /usr/local/bin/
 
 # uv.lock pins every transitive dependency — this is the source of truth
 # for reproducible builds. The lockfile must be committed.
-COPY pyproject.toml uv.lock ./
+COPY pyproject.toml uv.lock README.md ./
 
 # Private .whl deps (if any) that aren't on PyPI. Copied into the builder
 # but installed in the runtime stage so the builder only needs to export/build.
 COPY .dependencies /app/.dependencies
+
+# Source code is needed for the build step (version comes from __about__.py).
+# uv export does not need it, but the wheel build does.
+COPY src src/
 
 # Export locked runtime deps to requirements.txt (with hashes for pip verify)
 # then build the project wheel. --no-dev excludes dev/test/lint groups.
