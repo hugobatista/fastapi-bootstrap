@@ -5,7 +5,6 @@ from opentelemetry.trace import Span
 
 
 class OtelSpanAttributesMiddleware(BaseOpenTelemetryMiddleware):
-
     def _server_request_hook(self, span: Span, scope: dict):
         """
         This function is called by the FastAPI instrumentation when a request is received.

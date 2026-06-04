@@ -1,73 +1,68 @@
-FROM python:3-slim AS builder
+# =============================================================================
+# Stage 0: uv — pinned version for supply chain security
+# =============================================================================
+# Pulls the exact uv version specified by UV_VERSION (overridable at build time
+# with --build-arg UV_VERSION=x.y.z). This avoids depending on :latest which
+# could introduce breaking changes or compromised releases.
+ARG UV_VERSION=0.11.18
+FROM ghcr.io/astral-sh/uv:${UV_VERSION} AS uv-dist
+
+# =============================================================================
+# Stage 1: Builder — export locked deps + build wheel
+# =============================================================================
+FROM python:3.13-slim AS builder
 ENV PIP_ROOT_USER_ACTION=ignore
 
-RUN mkdir /app
 WORKDIR /app
 
-RUN pip install --no-cache --upgrade pip
-RUN pip install --no-cache hatch
+COPY --from=uv-dist /uv /uvx /usr/local/bin/
 
-# COPY the project files to the container and build the .whl files
-COPY . /app
-RUN hatch build
+# uv.lock pins every transitive dependency — this is the source of truth
+# for reproducible builds. The lockfile must be committed.
+COPY pyproject.toml uv.lock ./
 
+# Private .whl deps (if any) that aren't on PyPI. Copied into the builder
+# but installed in the runtime stage so the builder only needs to export/build.
+COPY .dependencies /app/.dependencies
 
+# Export locked runtime deps to requirements.txt (with hashes for pip verify)
+# then build the project wheel. --no-dev excludes dev/test/lint groups.
+RUN uv export --no-dev --no-emit-project -o requirements.txt \
+ && uv build
 
-FROM python:3-slim
+# =============================================================================
+# Stage 2: Runtime — minimal image with locked deps + app
+# =============================================================================
+FROM python:3.13-slim
 ENV PIP_ROOT_USER_ACTION=ignore
 
-# Links Docker image with repository
 LABEL org.opencontainers.image.source=https://github.com/hugobatista/fastapi-bootstrap
 
-RUN mkdir /app
+# Non-root user for security — all runtime operations run as this user
+RUN addgroup --system app && adduser --system --group app
 
-RUN pip install --no-cache --upgrade pip 
+# Install locked deps with --require-hashes so pip verifies every package
+# against the checksums recorded by uv export. This prevents MITM or
+# registry compromise from injecting malicious code.
+COPY --from=builder /app/requirements.txt ./
+RUN pip install --no-cache --upgrade pip \
+ && pip install --no-cache --require-hashes -r ./requirements.txt
 
-
-# copy and install any dependencies that are required by the application and were provided as whl files
-# this may include dependencies that are not available in the public pypi repository (if any)
-# this is useful because the api_server might be using a private package that is 
-# yet to be published to the public pypi repository
-COPY  ./.dependencies /app/.dependencies
+# Install private .whl dependencies (if any)
+# These live outside the lockfile since they're local/pinned artifacts.
+COPY --from=builder /app/.dependencies /app/.dependencies
 RUN if ls -1 /app/.dependencies/*.whl >/dev/null 2>&1; then \
     pip install --no-cache-dir /app/.dependencies/*.whl; \
-  else \
-    echo "No .whl files found in /app/.dependencies"; \
   fi
 
+# Install the app wheel — no source code in the final image, only the
+# installed package. Reduces attack surface and image size.
+COPY --from=builder /app/dist/*.whl /tmp/
+RUN pip install --no-cache-dir /tmp/*.whl && rm /tmp/*.whl
 
-
-# copy and install the application itself (this requires that the application is packaged as a whl file)
-# ensure that the application is packaged as a whl file and is present in the /app/dist folder
-# Packaging can be done by running hatch build in the root of the application
-COPY --from=builder /app/dist /app/dist
-RUN pip install --no-cache-dir /app/dist/*.whl
-
-#-------
-# IF the config file needs to be changed at runtime, uncomment the following lines
-
-# extract the whl files to /app
-# this is done so source and config files are available in the container
-#RUN pip install --no-deps --target /app /app/dist/*.whl
-# Configuration file path used when booting
-#ENV CONFIG_FILE=/app/fastapi-bootstrap/api_server/config/api_server.config.json
-#-------
-
-# Clean up unnecessary files
-RUN rm -rf /app
-
-# create a user to run the application
-RUN addgroup --system app && adduser --system --group app 
-
-
-# set the environment variables
-# API key for request validation
+# Runtime configuration (override via -e at container start)
 ENV API_SERVER_API_KEY="devapikey"
-
-# Turnstile configuration
 ENV TURNSTILE_ENABLED=false
-ENV TURNSTILE_SECRET_KEY=<turnstile-secret-key>
-
 
 USER app
 CMD ["api-server"]

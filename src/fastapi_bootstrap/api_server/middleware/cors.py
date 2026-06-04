@@ -8,7 +8,7 @@ class CORSMiddleware(fastapi_CORSMiddleware):
     middleware_config = None
     middleware_enabled = True
     allow_origins_regex: ClassVar[None] = None
-    allow_credentials: ClassVar[bool] = False
+    allow_credentials: bool = False
     max_age: ClassVar[int] = 600
     expose_headers: ClassVar[list[str]] = []
 

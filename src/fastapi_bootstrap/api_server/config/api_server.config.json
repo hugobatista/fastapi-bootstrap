@@ -1,15 +1,13 @@
 {
     "authentication": {
         "turnstile" : {
-            "enabled": "${TURNSTILE_ENABLED}",
-            "secret_key" : "${TURNSTILE_SECRET_KEY}"
+            "enabled": false,
+            "secret_key": ""
         },
         "api_key_management" : {
-            "valid_api_keys" : 
-                "${API_SERVER_API_KEY}"
-            
+            "valid_api_keys": ["devapikey"]
         }
-        
+
     },
 
     "middleware": {

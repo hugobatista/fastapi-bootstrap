@@ -42,6 +42,27 @@ allow-direct-references = true
 [project.scripts]
 api-server = "fastapi_bootstrap.api_server:entrypoint"
 
+[tool.uv]
+required-version = "0.11.18"
+exclude-newer = "30 days"
+
+[dependency-groups]
+lint = [
+    "mypy>=1.0.0",
+    "ruff>=0.0.243",
+]
+test = [
+    "coverage[toml]>=6.5",
+    "httpx",
+    "pytest",
+    "pytest-cov",
+]
+dev = [
+    "hatch>=1.16.5",
+    {include-group = "lint"},
+    {include-group = "test"},
+]
+
 [project.urls]
 Documentation = "https://go.hugobatista.com/github/fastapi-bootstrap#readme"
 Issues = "https://go.hugobatista.com/github/fastapi-bootstrap/issues"
@@ -59,73 +80,26 @@ packages = ["src/fastapi_bootstrap"]
 exclude = ["tests"]
 
 [tool.hatch.envs.default]
-# using uv for faster installs
-installer = "uv"
-
-dependencies = [
-  "coverage[toml]>=6.5",
-  "pytest",
-  "httpx"
-  #"fastapi_bootstrap-cli @ {root:parent:uri}/fastapi_bootstrap-cli",
-]
+type = "virtual"
+path = ".venv"
 
 # Pre-install dependencies that are not available on PyPI
 pre-install-commands = [
    "python -c \"import glob, subprocess; [subprocess.run(['uv', 'pip', 'install', whl]) for whl in glob.glob('.dependencies/*.whl')]\"",
 ]
 
-[tool.hatch.envs.default.env-vars]
-API_SERVER_API_KEY = "devapikey"
-
 [tool.hatch.envs.default.scripts]
-test = "pytest {args:tests} -v"
-test-cov = "coverage run -m pytest {args:tests} -v"
-cov-report = [
-  "- coverage combine",
-  "coverage report",
-  "coverage html",
-]
-cov = [
-  "test-cov",
-  "cov-report",
-]
-
-[[tool.hatch.envs.all.matrix]]
-python = ["3.13"]
-
-[tool.hatch.envs.lint]
-detached = true
-# using uv for faster installs
-installer = "uv"
-
-dependencies = [
-  "black>=23.1.0",
-  "mypy>=1.0.0",
-  "ruff>=0.0.243",
-]
-[tool.hatch.envs.lint.scripts]
-typing = "mypy --ignore-missing-imports --install-types --non-interactive {args:src/fastapi_bootstrap tests}"
-style = [
-  "ruff check {args:.}",
-  "black --check --diff {args:.}",
-]
-fmt = [
-  "black {args:.}",
-  "ruff --fix {args:.}",
-  "style",
-]
-all = [
-  "style",
-  "typing",
-]
-
-[tool.black]
-target-version = ["py37"]
-line-length = 100
-skip-string-normalization = true
+lint = "ruff check . --fix"
+format = "ruff format ."
+lint-check = "ruff check ."
+format-check = "ruff format --check ."
+test = "pytest"
+typecheck = "mypy"
+validate = ["lint", "format", "test", "typecheck"]
+check = ["lint-check", "format-check", "test", "typecheck"]
 
 [tool.ruff]
-target-version = "py37"
+target-version = "py313"
 line-length = 100
 lint.select = [
   "A",
@@ -175,6 +149,9 @@ ban-relative-imports = "all"
 # Tests can use magic values, assertions, and relative imports
 "tests/**/*" = ["PLR2004", "S101", "TID252"]
 
+[tool.ruff.format]
+quote-style = "double"
+
 [tool.coverage.run]
 source_pkgs = ["fastapi_bootstrap", "tests"]
 branch = true
@@ -188,8 +165,28 @@ fastapi_bootstrap = ["src/fastapi_bootstrap", "*/fastapi-bootstrap/src/fastapi_b
 tests = ["tests", "*/fastapi_bootstrap/tests"]
 
 [tool.coverage.report]
+show_missing = true
+skip_covered = false
+fail_under = 100
 exclude_lines = [
   "no cov",
   "if __name__ == .__main__.:",
   "if TYPE_CHECKING:",
 ]
+
+[tool.pytest.ini_options]
+addopts = "-v"
+pythonpath = ["src"]
+testpaths = ["tests"]
+
+[tool.mypy]
+python_version = "3.13"
+ignore_missing_imports = true
+check_untyped_defs = true
+incremental = false
+files = ["src"]
+exclude = ["tests/"]
+
+[[tool.mypy.overrides]]
+module = ["opentelemetry.*", "aiohttp.*"]
+ignore_missing_imports = true
