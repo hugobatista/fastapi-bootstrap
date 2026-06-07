@@ -1,3 +1,5 @@
+.env
+.env.*
 .git
 .gitignore
 .deployment
